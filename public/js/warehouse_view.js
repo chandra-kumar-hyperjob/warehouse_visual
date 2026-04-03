@@ -1,1 +1,0 @@
-console.log("warehouse_visual public js loaded");
