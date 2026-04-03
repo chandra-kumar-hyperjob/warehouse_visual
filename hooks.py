@@ -1,0 +1,6 @@
+app_name = "warehouse_visual"
+app_title = "Warehouse Visual"
+app_publisher = "Your Name"
+app_description = "2D and 2.5D warehouse visualization for ERPNext"
+app_email = "you@example.com"
+app_license = "MIT"
