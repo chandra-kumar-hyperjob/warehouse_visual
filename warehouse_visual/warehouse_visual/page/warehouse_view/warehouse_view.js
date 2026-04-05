@@ -6,9 +6,14 @@ frappe.pages["warehouse-view"].on_page_load = function (wrapper) {
   });
 
   $(page.body).html(`
-    <div style="padding: 24px;">
-      <h2>Hello World</h2>
-      <p>warehouse_visual app loaded successfully vtech.</p>
+    <div style="padding: 12px;">
+      <div style="margin-bottom: 12px; font-size: 14px;">
+        MyWarehouseVisualizer embed test
+      </div>
+      <iframe
+        src="/assets/warehouse_visual/warehouse_visualizer/index.html"
+        style="width: 100%; height: 800px; border: 1px solid #ddd; border-radius: 8px;"
+      ></iframe>
     </div>
   `);
 };
