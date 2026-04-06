@@ -232,15 +232,36 @@ function fnShowMyWarehouseVisualizerDemo(){
 		
 	var warehouseIndex = parentLayout.get("main").toolbar.items.find(function(item){return item.id == "warehouse"}).selected;
 	
-	if (warehouseIndex <= 0){   																										//Show Demo Instructions
-		
-		parentLayout.content("main", "<div id='demoInstructions'></div");
-		$("#demoInstructions").load("demoInstructions.html");
-		parentLayout.get("main").toolbar.disable("toggleAnalyzer");			
-		parentLayout.get("main").toolbar.disable("toggleVisualGrid");																											
-		return;
-		
-	}
+	if (window.WV_BOOT_DATA && window.WV_BOOT_DATA.layout && window.WV_BOOT_DATA.inventory) {
+    console.log("Using ERPNext injected data instead of demo CSV");
+
+    try {
+        var layoutData = JSON.parse(JSON.stringify(window.WV_BOOT_DATA.layout)).map(row => {
+            delete row.recid;
+            delete row.visualObj;
+            return row;
+        });
+
+        var inventoryData = JSON.parse(JSON.stringify(window.WV_BOOT_DATA.inventory)).map(row => {
+            delete row.recid;
+            return row;
+        });
+
+        var warehouseName = "ERPNext_Warehouse";
+
+        var warehouseScene = { scene: fnBuildWarehouse(layoutData) };
+
+        if (warehouseScene) {
+            fnShowWarehouse(warehouseName, warehouseScene, inventoryData, layoutData);
+            console.log("fnShowWarehouse finished");
+        }
+    } catch (e) {
+        console.error("ERPNext render failed", e);
+    }
+
+    return;
+}
+
 	
 	var warehouseName =  appWarehouses[warehouseIndex].warehouseName;
 	
@@ -357,12 +378,12 @@ function fnShowMyWarehouseVisualizerDemo(){
 				   https://stackoverflow.com/questions/49956422/what-is-difference-between-boxbuffergeometry-vs-boxgeometry-in-three-js
 				BoxBufferGeometry(width : Float, height : Float, depth : Float, widthSegments : Integer, heightSegments : Integer, depthSegments : Integer)
 
-					width — Width of the sides on the X axis. Default is 1.
-					height — Height of the sides on the Y axis. Default is 1.
-					depth — Depth of the sides on the Z axis. Default is 1.
-					widthSegments — Optional. Number of segmented faces along the width of the sides. Default is 1.
-					heightSegments — Optional. Number of segmented faces along the height of the sides. Default is 1.
-					depthSegments — Optional. Number of segmented faces along the depth of the sides. Default is 1. 
+					width ï¿½ Width of the sides on the X axis. Default is 1.
+					height ï¿½ Height of the sides on the Y axis. Default is 1.
+					depth ï¿½ Depth of the sides on the Z axis. Default is 1.
+					widthSegments ï¿½ Optional. Number of segmented faces along the width of the sides. Default is 1.
+					heightSegments ï¿½ Optional. Number of segmented faces along the height of the sides. Default is 1.
+					depthSegments ï¿½ Optional. Number of segmented faces along the depth of the sides. Default is 1. 
 				
 				*/		
 

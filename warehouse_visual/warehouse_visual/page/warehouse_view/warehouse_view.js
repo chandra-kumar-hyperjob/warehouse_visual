@@ -7,9 +7,20 @@ frappe.pages["warehouse-view"].on_page_load = function (wrapper) {
 
   $(page.body).html(`
     <div style="padding: 12px;">
-      <div id="warehouse-visualizer-root" style="width:100%; height:800px;"></div>
+      <div style="margin-bottom: 10px;">MyWarehouseVisualizer iframe test</div>
+      <iframe
+        id="wv-frame"
+        src="/assets/warehouse_visual/warehouse_visualizer/index.html?v=1"
+        style="width: 100%; height: 800px; border: 1px solid #ddd; border-radius: 8px;"
+      ></iframe>
     </div>
   `);
+
+  const iframe = $(page.body).find("#wv-frame")[0];
+  if (!iframe) {
+    console.error("wv-frame not found");
+    return;
+  }
 
   frappe.call({
     method: "warehouse_visual.api.get_layout_data",
@@ -17,9 +28,31 @@ frappe.pages["warehouse-view"].on_page_load = function (wrapper) {
       const data = r.message || {};
       console.log("ERPNext layout data", data);
 
-      // next step:
-      // call a wrapper function that feeds data into the visualizer
-      // instead of reading CSV files
+      let injected = false;
+      let tries = 0;
+      const maxTries = 20;
+
+      const tryInject = function () {
+        if (injected) return;
+        tries++;
+
+        if (!iframe.contentWindow) {
+          if (tries < maxTries) setTimeout(tryInject, 500);
+          return;
+        }
+
+        iframe.contentWindow.WV_BOOT_DATA = data;
+
+        if (typeof iframe.contentWindow.startFromInjectedData === "function") {
+          injected = true;
+          iframe.contentWindow.startFromInjectedData();
+          return;
+        }
+
+        if (tries < maxTries) setTimeout(tryInject, 500);
+      };
+
+      tryInject();
     }
   });
 };

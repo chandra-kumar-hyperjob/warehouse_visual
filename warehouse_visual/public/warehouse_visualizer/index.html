@@ -64,6 +64,36 @@
 
 </head>
 
-<body></body>
+<body>
+	<script>
+window.WV_BOOT_DATA = window.WV_BOOT_DATA || null;
+window.WV_BOOT_DONE = window.WV_BOOT_DONE || false;
+
+window.startFromInjectedData = function () {
+  if (!window.WV_BOOT_DATA) {
+    console.log("No injected ERPNext data found");
+    return false;
+  }
+
+  if (window.WV_BOOT_DONE) {
+    console.log("ERPNext injected startup already done");
+    return true;
+  }
+
+  window.WV_BOOT_DONE = true;
+
+  console.log("Starting from ERPNext injected data", window.WV_BOOT_DATA);
+
+  const old = document.getElementById("erpnext-injected-banner");
+  if (old) old.remove();
+
+    if (typeof fnShowMyWarehouseVisualizerDemo === "function") {
+    //fnShowMyWarehouseVisualizerDemo();
+  }
+
+  return true;
+};
+</script>    
+</body>
 
 </html>
